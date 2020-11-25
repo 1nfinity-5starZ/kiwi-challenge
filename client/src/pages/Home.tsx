@@ -1,13 +1,21 @@
 import React, { useState, useRef } from "react";
 
-import { Button, Header, TextInput } from "../components/common";
+import {
+  Button,
+  Flex,
+  Header,
+  TextInput,
+  Checkbox,
+} from "../components/common";
 import { Container, Title, Subtitle } from "../App.styles";
 import NumberPad from "../components/NumberPad";
 import Results from "../components/Results";
 
-function App() {
+function Home() {
   const [text, setText] = useState("");
   const [search, setSearch] = useState("");
+
+  const [filterWords, setFilterWords] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -22,22 +30,33 @@ function App() {
             of all possible combinations. Feel free to use the numpad provided
             below !
           </Subtitle>
-          <TextInput
-            label="Enter a number sequence"
-            type="t9"
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
+          <Flex
+            style={{
+              alignItems: "flex-end",
+              gap: 15,
+              flexWrap: "wrap",
+              marginBottom: 15,
             }}
-            ref={inputRef}
-          />
-          <Button
-            onClick={() => setSearch(text)}
-            style={{ marginLeft: 15 }}
-            color="#1EDA00"
           >
-            Get expansions
-          </Button>
+            <TextInput
+              label="Enter a number sequence"
+              type="t9"
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+              }}
+              ref={inputRef}
+            />
+            <Button onClick={() => setSearch(text)} color="#1EDA00">
+              Get expansions
+            </Button>
+            <Checkbox
+              containerStyle={{ flex: "1 0 100%" }}
+              label="Filter only suitable words"
+              checked={filterWords}
+              onChange={(e) => setFilterWords(e.target.checked)}
+            />
+          </Flex>
         </section>
         <NumberPad
           onClick={(e) => {
@@ -47,10 +66,10 @@ function App() {
         />
       </Container>
       <Container>
-        <Results sequence={search} />
+        <Results sequence={search} filterWords={filterWords} />
       </Container>
     </>
   );
 }
 
-export default App;
+export default Home;

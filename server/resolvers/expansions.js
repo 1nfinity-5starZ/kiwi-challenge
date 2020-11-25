@@ -1,3 +1,5 @@
+const dictionary = require('../words_dictionary.json');
+
 const numberToCharMap = {
   _2: ["a", "b", "c"],
   _3: ["d", "e", "f"],
@@ -52,6 +54,12 @@ module.exports.expansions = (_, args) => {
 
   if (numberSequence.length > 0) {
     findCombinations(numberSequence, "", 0, expansions);
+  }
+
+  // Dictionary provided by https://github.com/dwyl/english-words
+  // JSON dictionary makes it very performatic
+  if(args.filterWords) {
+    expansions = expansions.filter(word => dictionary[word] === 1)
   }
 
   return {

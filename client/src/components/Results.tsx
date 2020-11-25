@@ -1,27 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { gql, useQuery } from "@apollo/client";
-import { Button, Flex } from "./common";
+import { gql, useLazyQuery } from "@apollo/client";
+import { Button } from "./common";
 
-import { Result, Container, ResultsContainer } from "./Results.styles";
+import {
+  Result,
+  Container,
+  ResultsContainer,
+  Info,
+  InfoCard,
+} from "./Results.styles";
 
 const getExpansionsQuery = gql`
-  query Expansions($numberSequence: String!) {
-    expansions(numberSequence: $numberSequence) {
+  query Expansions($numberSequence: String!, $filterWords: Boolean) {
+    expansions(numberSequence: $numberSequence, filterWords: $filterWords) {
       numberSequence
       expansions
     }
   }
 `;
 
-const Results: React.FC<{ sequence?: string }> = React.memo(({ sequence }) => {
+const Results: React.FC<{
+  sequence?: string;
+  filterWords?: boolean;
+}> = React.memo(({ sequence, filterWords = false }) => {
   const [pageSize, setPageSize] = useState(100);
-  const { loading, data, error } = useQuery(getExpansionsQuery, {
-    variables: { numberSequence: sequence },
-  });
+  const [getExpansions, { loading, data, error }] = useLazyQuery(
+    getExpansionsQuery,
+    {
+      variables: { numberSequence: sequence, filterWords },
+    }
+  );
 
   useEffect(() => {
     setPageSize(100);
   }, [data]);
+
+  useEffect(() => {
+    if (sequence) {
+      getExpansions();
+    }
+  }, [sequence, getExpansions]);
 
   return (
     <Container>
@@ -29,31 +47,37 @@ const Results: React.FC<{ sequence?: string }> = React.memo(({ sequence }) => {
         "loading..."
       ) : error ? (
         <div>Error: {error.message}</div>
-      ) : (
+      ) : data ? (
         <>
-          <div>
-            Considered sequence of numbers: {data?.expansions?.numberSequence}
-          </div>
-          <div>
-            Possible combinations: {data?.expansions?.expansions.length}
-          </div>
-          <ResultsContainer>
-            {data?.expansions?.expansions
-              .slice(0, pageSize)
-              .map((e: string) => (
-                <Result key={e}>{e}</Result>
-              ))}
+          <Info>
+            <InfoCard>
+              <h2>{data.expansions?.numberSequence}</h2>
+              <p>Considered sequence of numbers</p>
+            </InfoCard>
+            <InfoCard>
+              <h2>{data.expansions?.expansions.length}</h2>
+              <p>{filterWords ? "Words found" : "Possible combinations"}</p>
+            </InfoCard>
+          </Info>
+          <ResultsContainer
+            className={
+              data.expansions?.expansions.length >= pageSize ? "sliced" : ""
+            }
+          >
+            {data.expansions?.expansions.slice(0, pageSize).map((e: string) => (
+              <Result key={e}>{e}</Result>
+            ))}
           </ResultsContainer>
-          {data.expansions.expansions.length > pageSize && (
+          {data.expansions?.expansions.length > pageSize && (
             <Button
               style={{ marginTop: 20, alignSelf: "center" }}
               onClick={() => setPageSize((current) => current + 100)}
             >
-              Load more
+              See more
             </Button>
           )}
         </>
-      )}
+      ) : null}
     </Container>
   );
 });

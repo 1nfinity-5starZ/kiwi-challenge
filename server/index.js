@@ -9,7 +9,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    expansions(numberSequence: String!): Expansion
+    expansions(numberSequence: String!, filterWords: Boolean): Expansion
   }
 `;
 
