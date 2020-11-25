@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { gql, useLazyQuery } from "@apollo/client";
-import { Button } from "./common";
+import { Button, Spinner } from "./common";
 
 import {
   Result,
@@ -44,7 +44,7 @@ const Results: React.FC<{
   return (
     <Container>
       {loading ? (
-        "loading..."
+        <Spinner style={{ margin: "0 auto" }} />
       ) : error ? (
         <div>Error: {error.message}</div>
       ) : data ? (
