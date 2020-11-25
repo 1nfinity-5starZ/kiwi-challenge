@@ -50,12 +50,13 @@ function Home() {
             <Button onClick={() => setSearch(text)} color="#1EDA00">
               Get expansions
             </Button>
-            <Checkbox
-              containerStyle={{ flex: "1 0 100%" }}
-              label="Filter only suitable words"
-              checked={filterWords}
-              onChange={(e) => setFilterWords(e.target.checked)}
-            />
+            <span style={{ flex: "1 0 100%" }}>
+              <Checkbox
+                label="Filter only suitable words"
+                checked={filterWords}
+                onChange={(e) => setFilterWords(e.target.checked)}
+              />
+            </span>
           </Flex>
         </section>
         <NumberPad
