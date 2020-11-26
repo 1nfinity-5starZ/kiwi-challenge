@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "install": "npm i && cd ./client && npm i && cd ../server && npm i",
+    "install-all": "npm i && cd ./client && npm i && cd ../server && npm i",
     "start": "concurrently \"cd ./client && npm start\" \"cd ./server && npm start\""
   },
   "devDependencies": {

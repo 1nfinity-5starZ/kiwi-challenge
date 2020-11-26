@@ -4,7 +4,7 @@ Kiwi.com development challenge
 
 The project consist of two folders: 'client' and 'server'.
 
-Cloning the project and running 'npm install' and then 'npm start' will automatically install dependencies of both folders and start both servers using concurrently.
+Cloning the project and running 'npm run install-all' and then 'npm start' will automatically install dependencies of both folders and start both servers using concurrently.
 
 It is also possible of course to do it individually for each folder.
 
